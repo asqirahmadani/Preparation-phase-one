@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My To Do List</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        header {
+            width: 630px;
+            height: 180px;
+            background-color: rgb(251, 57, 57);
+        }
+
+        .mySearch {
+            width: 120px;
+            height: 25px;
+            float: right;
+            border: none;
+            border-radius: 10px;
+            background-color: white;
+            margin-top: 20px;
+            margin-right: 20px;
+
+        }
+
+        p.title {
+            text-align: center;
+            height: 10px;
+            font-size: 22px;
+            padding-top: 90px;
+            color: white;
+        }
+
+        .addInput {
+            border: none;
+            border-radius: 10px;
+            width: 430px;
+            height: 35px;
+            background-color: white;
+            margin-left: 45px;
+            margin-top: 8px;
+            float: left;
+            color: rgb(119, 119, 119);
+            font-size: 16px;
+        }
+
+        .addBtn {
+            width: 100px;
+            height: 35px;
+            border-radius: 10px;
+            cursor: pointer;
+            background-color: rgb(171, 171, 171);
+            float: left;
+            margin-top: 8px;
+            margin-left: 2px;
+        }
+
+        .addBtn:hover {
+            background-color: rgb(141, 141, 141);
+        }
+
+        .add {
+            display: inline-block;
+            width: 100px;
+            color: rgb(68, 66, 66);
+            text-align: center;
+            font-size: 18px;
+            margin: 10px;
+            margin-left: 0px;
+        }
+
+        ul {
+            margin: 0;
+            padding: 0;
+        }
+
+        li {
+            cursor: pointer;
+            position: relative;
+            width: 630px;
+            height: 50px;
+            list-style: none;
+            background-color: rgb(224, 224, 224);
+            text-align: left;
+            padding: 12px 8px 12px 40px;
+            font-size: 18px;
+            /* float: left; */
+        }
+
+        li:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+
+        li:hover {
+            background-color: rgb(174, 174, 174);
+        }
+
+        ul li.checked {
+            background: rgb(136, 136, 136);
+            text-decoration: line-through;
+            color: white;
+        }
+
+        ul li.checked::before {
+            content: '';
+            border-color: #fff;
+            position: absolute;
+            border-style: solid;
+            top: 12px;
+            left: 16px;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+            height: 15px;
+            width: 7px;
+        }
+
+        .close {
+            position: absolute;
+            height: 50px;
+            right: 0;
+            top: 0;
+            padding: 12px 16px 12px 16px;
+        }
+
+        .close:hover {
+            background-color: rgb(251, 57, 57);
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <input type="text" id="search" class="mySearch" placeholder="Search..." title="Search your activity here!"
+            onkeyup="searchItems()">
+        <p class="title"><b>My To Do List</b></p>
+        <nav>
+            <input type="text" placeholder="Write here..." id="inputHere" class="addInput">
+            <div class="addBtn">
+                <span class="add" onclick="newList()">Add</span>
+            </div>
+        </nav>
+    </header>
+    <ul id="list">
+        <li>Study coding</li>
+        <li class="checked">Go to gym</li>
+        <li>Eat protein</li>
+        <li>Read a book</li>
+        <li>Watch movie</li>
+    </ul>
+
+    <script>
+        // tanda X untuk setiap list
+        const myList = document.getElementsByTagName('li');
+        // let i;
+        for (let i = 0; i < myList.length; i++) {
+            const tanda = document.createTextNode('\u00D7');    //kode untuk tanda X
+            const kosong = document.createElement('span');      //buat span kosong
+            kosong.className = "close";                         //span kosong kelasnya menjadi "close"
+            kosong.appendChild(tanda);                          //tanda X ditambahkan ke span
+            myList[i].appendChild(kosong);                      //tambahkan span ke list
+        }
+
+        // hapus list jika tanda X diklik
+        const kelas = document.getElementsByClassName("close"); //mengambil semua elemen dari list yang class "close"
+        for (let i = 0; i < kelas.length; i++) {
+            kelas[i].onclick = function () {                    //jika list diklik
+                const induk = this.parentElement;               //ini menunjuk ke induk dari kelas "close" atau merujuk ke list
+                induk.style.display = "none";                   //hilangkan list yang dituju
+            }
+        }
+
+        // tambahkan centang jika list diklik
+        const list = document.querySelector('ul');
+        list.addEventListener("click", function (event) {       //jika list diklik maka akan menjalankan function
+            if (event.target.tagName === 'LI') {                //event.target.tagName memanggil tag name dalam huruf kapital
+                event.target.classList.toggle("checked");       // jika dilik maka class list akan menjadi checked, jika sudah maka sebaliknya
+            }
+        });
+
+        // tambahkan list jika tombol Add diklik
+        function newList() {
+            const baru = document.createElement('li');          //buat list baru
+            const inputBaru = document.getElementById('inputHere').value; //mendapatkan value dari yang dituliskan diinput
+            const item = document.createTextNode(inputBaru);    //value nya dijadikan teks biasa
+            baru.appendChild(item);                             //list barunya ditambahkan dengan teks dari value
+            if (inputBaru == '') {
+                warn("TIdak boleh kosong!!");                   //jika value kosong maka beri peringatan
+            } else {
+                document.getElementById('list').appendChild(baru);  //jika tidak maka tambahkan list baru ke list utama
+            }
+
+            const tanda = document.createTextNode('\u00D7');    //untuk menambahkan tanda X
+            const kosong = document.createElement('span');
+            kosong.className = "close";
+            kosong.appendChild(tanda);
+            baru.appendChild(kosong);
+
+            for (let i = 0; i < kelas.length; i++) {            //untuk menghilangkan list jika tanda X diklik
+                kelas[i].onclick = function () {
+                    const induk = this.parentElement;
+                    induk.style.display = "none";
+                }
+            }
+        }
+
+        // menampilkan fitur yang ditulis di  fitur search
+        function searchItems() {
+            const input = document.getElementById('search').value.toUpperCase();    //value yang dimasukkan di search di jadikan huruf kapital
+            const ul = document.getElementById('list');
+            const li = ul.getElementsByTagName('li');
+
+            for (let i = 0; i < li.length; i++) {
+                let kata = li[i];
+                if (kata.textContent.toUpperCase().indexOf(input) > -1) {
+                    li[i].style.display = '';
+                } else {
+                    li[i].style.display = 'none';
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
